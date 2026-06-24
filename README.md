@@ -1,9 +1,9 @@
-# Nexus — Ideas in Motion
+# Fathomline — Ideas at Depth
 
-An ultra-modern portfolio that showcases your **hardware & software ideas** in a clear,
-easy-to-understand way — and lets visitors **vote** on which project should be built
-next. Some ideas are finished products, others are just mockups; every one is labelled
-with its stage so people know exactly what they're looking at.
+An ultra-modern, nautically-themed portfolio that charts your **hardware & software
+ideas** in a clear, easy-to-understand way — and lets visitors **vote** on which project
+should surface next. Some ideas are finished products, others are just mockups; every one
+is labelled with its stage so people know exactly what they're looking at.
 
 Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS v4**, **Framer
 Motion** and **Prisma + SQLite**.
@@ -22,7 +22,8 @@ Motion** and **Prisma + SQLite**.
 - **Admin upload area** (`/admin`) — password-protected dashboard to publish new
   projects, upload cover images (or paste an image URL), feature standouts, and delete
   projects.
-- **Ultra-modern design** — animated aurora background, gradient accents, frosted glass
+- **Ultra-modern, nautical design** — animated deep-ocean current background, sea-chart
+  graticule, ocean-depth gradient accents (blue → cyan → seafoam), frosted glass
   surfaces, smooth motion, fully responsive.
 
 ## Quick start

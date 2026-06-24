@@ -74,7 +74,7 @@ export function ProjectForm({ onCreated }: { onCreated: (p: ProjectDTO) => void 
 
   const label = "block text-sm font-medium text-white/70 mb-1.5";
   const input =
-    "w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-fuchsia-400/50";
+    "w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-2.5 text-sm text-white placeholder-white/30 outline-none transition focus:border-cyan-400/50";
 
   return (
     <form onSubmit={submit} className="glass-strong space-y-5 rounded-3xl p-6 sm:p-8">
@@ -222,7 +222,7 @@ export function ProjectForm({ onCreated }: { onCreated: (p: ProjectDTO) => void 
           type="checkbox"
           checked={form.featured}
           onChange={(e) => update("featured", e.target.checked)}
-          className="h-4 w-4 accent-fuchsia-500"
+          className="h-4 w-4 accent-cyan-500"
         />
         <span className="text-sm text-white/70">
           Feature this project (highlighted with a badge)
@@ -243,7 +243,7 @@ export function ProjectForm({ onCreated }: { onCreated: (p: ProjectDTO) => void 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-4 py-3 font-semibold text-white shadow-lg shadow-fuchsia-500/25 transition hover:shadow-fuchsia-500/40 disabled:opacity-50"
+        className="w-full rounded-xl bg-gradient-to-r from-sky-500 via-cyan-400 to-teal-300 px-4 py-3 font-semibold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40 disabled:opacity-50"
       >
         {submitting ? "Publishing…" : "Publish project"}
       </button>

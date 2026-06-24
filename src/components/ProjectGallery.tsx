@@ -127,7 +127,7 @@ export function ProjectGallery() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search ideas, tags…"
-            className="w-full rounded-xl border border-white/10 bg-black/30 py-2 pl-9 pr-3 text-sm text-white placeholder-white/35 outline-none transition focus:border-fuchsia-400/50"
+            className="w-full rounded-xl border border-white/10 bg-black/30 py-2 pl-9 pr-3 text-sm text-white placeholder-white/35 outline-none transition focus:border-cyan-400/50"
           />
         </div>
 
@@ -143,7 +143,7 @@ export function ProjectGallery() {
           <select
             value={stage}
             onChange={(e) => setStage(e.target.value as Stage | "all")}
-            className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80 outline-none transition focus:border-fuchsia-400/50"
+            className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80 outline-none transition focus:border-cyan-400/50"
           >
             <option value="all">All stages</option>
             {STAGES.map((s) => (

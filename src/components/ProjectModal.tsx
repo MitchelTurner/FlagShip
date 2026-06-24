@@ -61,7 +61,7 @@ export function ProjectModal({
               </svg>
             </button>
 
-            <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-indigo-900/50 to-cyan-900/40">
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-gradient-to-br from-sky-950/50 to-teal-900/40">
               {project.imageUrl ? (
                 <Image
                   src={project.imageUrl}
@@ -78,7 +78,7 @@ export function ProjectModal({
                   </span>
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d16] via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#04070f] via-transparent to-transparent" />
             </div>
 
             <div className="space-y-5 p-6 sm:p-8">
@@ -133,7 +133,7 @@ export function ProjectModal({
                   <span className="text-sm text-white/50">
                     {project.hasVoted
                       ? "Thanks for voting!"
-                      : "Vote to push this up the build queue"}
+                      : "Vote to surface this from the depths"}
                   </span>
                 </div>
 

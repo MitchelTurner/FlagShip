@@ -8,30 +8,30 @@ export default function Home() {
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-xs font-medium text-white/70">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-300 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-300" />
             </span>
-            Live idea lab · hardware & software
+            Charting hardware &amp; software · live
           </span>
 
           <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl">
-            Ideas in motion.
+            Sound the depths.
             <br />
-            <span className="text-gradient">You decide what ships.</span>
+            <span className="text-gradient">You decide what surfaces.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-xl text-lg text-white/60">
             A living portfolio of concepts — finished products, working
-            prototypes, and bold mockups. Browse the lab and vote for the
-            projects you want built next.
+            prototypes, and bold mockups charted at every depth. Explore the
+            soundings and vote for the ideas you want brought to the surface.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
               href="#showcase"
-              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-400 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/25 transition hover:shadow-fuchsia-500/40"
+              className="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 via-cyan-400 to-teal-300 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40"
             >
-              Explore the showcase
+              Dive into the showcase
               <svg viewBox="0 0 24 24" className="h-4 w-4 transition-transform group-hover:translate-y-0.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M12 5v14M5 12l7 7 7-7" />
               </svg>
@@ -48,9 +48,9 @@ export default function Home() {
         <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             { label: "Concepts", value: "Hardware + Software" },
-            { label: "Statuses", value: "Idea → Shipped" },
-            { label: "Community", value: "1 vote = 1 voice" },
-            { label: "Updated", value: "Continuously" },
+            { label: "Soundings", value: "Idea → Surfaced" },
+            { label: "Crew", value: "1 vote = 1 voice" },
+            { label: "Charts updated", value: "Continuously" },
           ].map((item) => (
             <div key={item.label} className="glass rounded-2xl p-4 text-center">
               <div className="text-sm font-semibold text-white">

@@ -14,9 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nexus — Ideas in Motion",
+  metadataBase: new URL("https://fathomline.com"),
+  title: "Fathomline — Ideas at Depth",
   description:
-    "A living showcase of hardware & software concepts. Explore the lab, then vote on what gets built next.",
+    "A living showcase of hardware & software concepts. Sound the depths, then vote on what surfaces next.",
 };
 
 export default function RootLayout({
@@ -36,8 +37,8 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <footer className="border-t border-white/10 py-8 mt-20">
           <div className="mx-auto max-w-6xl px-6 text-sm text-white/40 flex flex-col sm:flex-row gap-2 justify-between">
-            <span>© {new Date().getFullYear()} Nexus Lab. Built with Next.js.</span>
-            <span>Ideas in motion · Vote · Build · Ship</span>
+            <span>© {new Date().getFullYear()} Fathomline. Built with Next.js.</span>
+            <span>Sound · Vote · Build · Surface</span>
           </div>
         </footer>
       </body>

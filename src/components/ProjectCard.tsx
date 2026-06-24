@@ -53,7 +53,7 @@ export function VoteButton({
       aria-pressed={hasVoted}
       className={`group/vote flex shrink-0 flex-col items-center gap-0.5 rounded-xl border px-3 py-2 transition disabled:opacity-60 ${
         hasVoted
-          ? "border-fuchsia-400/40 bg-fuchsia-500/15 text-fuchsia-200"
+          ? "border-teal-300/40 bg-teal-400/15 text-teal-200"
           : "border-white/10 bg-white/5 text-white/70 hover:border-white/25 hover:bg-white/10 hover:text-white"
       }`}
       title={hasVoted ? "Remove your vote" : "Vote for this project"}
@@ -97,7 +97,7 @@ export function ProjectCard({
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.4) }}
       onClick={() => onOpen(project)}
-      className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl glass transition hover:border-white/20 hover:shadow-2xl hover:shadow-fuchsia-500/10"
+      className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl glass transition hover:border-white/20 hover:shadow-2xl hover:shadow-cyan-500/10"
     >
       {project.featured && (
         <span className="absolute left-4 top-4 z-10 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-2.5 py-0.5 text-[11px] font-semibold text-black shadow">
@@ -105,7 +105,7 @@ export function ProjectCard({
         </span>
       )}
 
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br from-indigo-900/40 via-slate-900/40 to-cyan-900/30">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-gradient-to-br from-sky-950/50 via-slate-900/40 to-teal-900/30">
         {project.imageUrl ? (
           <Image
             src={project.imageUrl}
