@@ -181,10 +181,10 @@ export function GithubSettings() {
           </button>
           {initial && (
             <Link
-              href="/github"
+              href="/"
               className="text-sm font-medium text-white/60 transition hover:text-white"
             >
-              View live work →
+              View portfolio →
             </Link>
           )}
         </div>

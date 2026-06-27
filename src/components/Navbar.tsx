@@ -3,15 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/#showcase", label: "Showcase" },
-  { href: "/github", label: "Live Work" },
-  { href: "/admin", label: "Admin" },
-];
-
 export function Navbar() {
   const pathname = usePathname();
+  const onAdmin = pathname.startsWith("/admin");
+
+  // Admin is intentionally unlisted — no nav links on public pages.
+  if (onAdmin) return null;
 
   return (
     <header className="sticky top-0 z-50">
@@ -37,28 +34,6 @@ export function Navbar() {
               Fathom<span className="text-white/40">line</span>
             </span>
           </Link>
-
-          <div className="flex items-center gap-1">
-            {links.map((link) => {
-              const active =
-                link.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(link.href.replace("/#showcase", "/"));
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                    active
-                      ? "bg-white/10 text-white"
-                      : "text-white/60 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </div>
         </nav>
       </div>
     </header>
