@@ -36,7 +36,7 @@ export function Navbar() {
               </svg>
             </span>
             <span className="text-lg font-semibold tracking-tight">
-              Fathom<span className="text-white/40">line</span>
+              mitchelturner<span className="text-white/40">.dev</span>
             </span>
           </Link>
 

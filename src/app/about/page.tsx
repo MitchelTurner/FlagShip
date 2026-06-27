@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About — Fathomline",
+  title: "About — Mitchel Turner",
   description:
     "Mitchel Turner — developer in Ketchikan, Alaska. Data pipelines, machine learning, API integrations, hardware, and custom tools.",
 };

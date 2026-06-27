@@ -4,7 +4,7 @@ import { LiveWorkPortfolio } from "@/components/LiveWorkPortfolio";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Fathomline — Live Work",
+  title: "Mitchel Turner — Live Work",
   description:
     "A portfolio auto-built from public GitHub repositories — cover art, language breakdowns, and live deployments.",
 };

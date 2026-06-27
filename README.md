@@ -1,10 +1,7 @@
-# Fathomline — Deep Learning, Fathomed
+# mitchelturner.dev
 
-An ultra-modern, deep-ocean-themed portfolio for **deep-learning & AI** work — showcasing
-your **models, hardware & software ideas** in a clear, easy-to-understand way, and letting
-visitors **vote** on which project should surface next. Some ideas are production-ready,
-others are research mockups; every one is labelled with its stage so people know exactly
-what they're looking at.
+Personal portfolio site for **Mitchel Turner** — auto-synced GitHub work, an about page,
+and a hidden admin area for managing projects.
 
 Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS v4**, **Framer
 Motion** and **Prisma + SQLite**.

@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 // Deterministically pick a gradient from the repo name so each card graphic is
 // distinct but stable across renders.
-// Ocean-depth palette to match the Fathomline identity (blues → cyan → teal).
+// Ocean-depth palette (blues → cyan → teal).
 const GRADIENTS: [string, string][] = [
   ["#0ea5e9", "#5eead4"],
   ["#0284c7", "#22d3ee"],

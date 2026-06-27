@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://fathomline.com"),
-  title: "Fathomline — Live Work",
+  metadataBase: new URL("https://mitchelturner.dev"),
+  title: "Mitchel Turner — Live Work",
   description:
     "A portfolio auto-built from public GitHub repositories — cover art, language breakdowns, and live deployments.",
 };
@@ -37,7 +37,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <footer className="border-t border-white/10 py-8 mt-20">
           <div className="mx-auto max-w-6xl px-6 text-sm text-white/40 flex flex-col sm:flex-row gap-2 justify-between">
-            <span>© {new Date().getFullYear()} Fathomline. Built with Next.js.</span>
+            <span>© {new Date().getFullYear()} mitchelturner.dev</span>
             <span>Synced from GitHub</span>
           </div>
         </footer>

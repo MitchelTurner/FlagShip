@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-const KEY = "fathomline_voter_key";
+const KEY = "mitchelturner_voter_key";
 
 function createKey(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
