@@ -23,6 +23,15 @@ Motion** and **Prisma + SQLite**.
 - **Admin upload area** (`/admin`) — password-protected dashboard to publish new
   projects, upload cover images (or paste an image URL), feature standouts, and delete
   projects.
+- **Auto-synced GitHub portfolio** (`/github`) — point it at a GitHub username and the
+  "Live Work" page builds itself from your public repositories:
+  - **Generated cover art** — a unique 1200×630 graphic is rendered on the fly for every
+    repo (via `next/og`) using its name, description, primary language, topics and stats.
+  - **Deployment status** — surfaces live links from each repo's homepage, GitHub Pages,
+    or the GitHub Deployments API (with environment + status badges when a token is set).
+  - **Language breakdowns**, stars, forks and last-activity, all cached for an hour to
+    respect API rate limits.
+  - Set the username straight from the admin dashboard (stored in the DB) — no redeploy.
 - **Ultra-modern, deep-ocean design** — animated deep-ocean current background, latent-space
   grid, ocean-depth gradient accents (blue → cyan → seafoam), frosted glass
   surfaces, smooth motion, fully responsive.
@@ -52,30 +61,41 @@ Open [http://localhost:3000](http://localhost:3000). The admin area lives at
 
 ## Environment variables
 
-| Variable         | Description                                              | Default      |
-| ---------------- | -------------------------------------------------------- | ------------ |
-| `DATABASE_URL`   | SQLite connection string (relative to `prisma/`).        | `file:./dev.db` |
-| `ADMIN_PASSWORD` | Password required to access the `/admin` upload area.    | `changeme`   |
+| Variable          | Description                                                              | Default         |
+| ----------------- | ------------------------------------------------------------------------ | --------------- |
+| `DATABASE_URL`    | SQLite connection string (relative to `prisma/`).                        | `file:./dev.db` |
+| `ADMIN_PASSWORD`  | Password required to access the `/admin` upload area.                    | `changeme`      |
+| `GITHUB_USERNAME` | GitHub account that powers the "Live Work" page. Can also be set in `/admin`. | _(unset)_  |
+| `GITHUB_TOKEN`    | Optional read-only token. Raises the API limit (60 → 5000 req/hr) and enables richer deployment status. | _(unset)_ |
 
 > **Change `ADMIN_PASSWORD` before deploying.** The login sets an HTTP-only cookie
 > containing an HMAC of the password — the raw password is never stored client-side.
+
+> The GitHub username can be configured either via `GITHUB_USERNAME` or live from the
+> admin dashboard (the database value takes precedence). Without a `GITHUB_TOKEN` the
+> app uses unauthenticated requests (60 req/hr) and skips per-repo deployment lookups,
+> relying on each repo's homepage / GitHub Pages link instead.
 
 ## Project structure
 
 ```
 prisma/
-  schema.prisma        # Project + Vote models (SQLite)
+  schema.prisma        # Project + Vote + Setting models (SQLite)
   seed.mjs             # Sample hardware/software projects
 src/
   app/
-    page.tsx           # Landing hero + showcase
-    admin/page.tsx     # Admin dashboard (login, upload, manage)
+    page.tsx           # Landing hero + GitHub highlights + showcase
+    github/page.tsx    # Auto-generated "Live Work" portfolio from GitHub
+    admin/page.tsx     # Admin dashboard (login, GitHub sync, upload, manage)
     api/
       projects/        # List / create / get / delete + vote
       admin/           # login / logout / session
       upload/          # image upload (admin only)
-  components/          # Navbar, gallery, cards, modal, forms
-  lib/                 # prisma client, auth, types, voter key
+      github/repos/    # Normalized portfolio repositories
+      og/repo/         # On-the-fly repo cover graphics (next/og)
+      settings/github/ # Get / set the configured GitHub username
+  components/          # Navbar, gallery, cards, modal, forms, RepoCard, GitHub settings
+  lib/                 # prisma client, auth, types, github client, settings, voter key
 ```
 
 ## Useful scripts
