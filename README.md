@@ -65,16 +65,17 @@ Open [http://localhost:3000](http://localhost:3000). The admin area lives at
 | ----------------- | ------------------------------------------------------------------------ | --------------- |
 | `DATABASE_URL`    | SQLite connection string (relative to `prisma/`).                        | `file:./dev.db` |
 | `ADMIN_PASSWORD`  | Password required to access the `/admin` upload area.                    | `changeme`      |
-| `GITHUB_USERNAME` | GitHub account that powers the "Live Work" page. Can also be set in `/admin`. | _(unset)_  |
+| `GITHUB_USERNAME` | GitHub account for Live Work. Also configurable in `/admin` or `github.config.json`. | _(see config file)_ |
 | `GITHUB_TOKEN`    | Optional read-only token. Raises the API limit (60 → 5000 req/hr) and enables richer deployment status. | _(unset)_ |
 
 > **Change `ADMIN_PASSWORD` before deploying.** The login sets an HTTP-only cookie
 > containing an HMAC of the password — the raw password is never stored client-side.
 
-> The GitHub username can be configured either via `GITHUB_USERNAME` or live from the
-> admin dashboard (the database value takes precedence). Without a `GITHUB_TOKEN` the
-> app uses unauthenticated requests (60 req/hr) and skips per-repo deployment lookups,
-> relying on each repo's homepage / GitHub Pages link instead.
+> **GitHub username resolution** (first match wins): admin dashboard (SQLite) →
+> `GITHUB_USERNAME` env var → `github.config.json` in the repo root. On serverless
+> hosts (Vercel, etc.) the SQLite database is usually **not persistent**, so admin
+> saves may not stick — set `GITHUB_USERNAME` on your host or edit `github.config.json`
+> and redeploy. Repo data refreshes every ~2 minutes (or use **Force refresh** in admin).
 
 ## Project structure
 

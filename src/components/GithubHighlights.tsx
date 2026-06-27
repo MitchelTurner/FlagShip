@@ -3,10 +3,31 @@ import { fetchPortfolioRepos } from "@/lib/github";
 import { RepoCard } from "@/components/RepoCard";
 
 // Server component: renders the top few GitHub repos on the landing page.
-// Renders nothing if GitHub isn't configured or reachable so the page stays clean.
 export async function GithubHighlights() {
   const { username, repos, error } = await fetchPortfolioRepos(3);
-  if (error || repos.length === 0) return null;
+
+  if (!username) return null;
+
+  if (error || repos.length === 0) {
+    return (
+      <section className="mx-auto max-w-6xl px-6 py-16">
+        <div className="glass rounded-2xl p-8 text-center">
+          <p className="text-sm font-medium text-white/70">
+            GitHub sync · @{username}
+          </p>
+          <p className="mt-2 text-sm text-white/45">
+            {error ?? "No public repositories to show yet."}
+          </p>
+          <Link
+            href="/github"
+            className="mt-4 inline-flex text-sm font-medium text-cyan-300 hover:text-cyan-200"
+          >
+            Open Live Work →
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="mx-auto max-w-6xl px-6 py-16">

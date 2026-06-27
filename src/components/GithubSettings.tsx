@@ -1,31 +1,44 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type Source = "database" | "env" | "config" | null;
+
+const SOURCE_LABEL: Record<NonNullable<Source>, string> = {
+  database: "admin dashboard",
+  env: "GITHUB_USERNAME env var",
+  config: "github.config.json",
+};
+
 export function GithubSettings() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [initial, setInitial] = useState("");
+  const [activeSource, setActiveSource] = useState<Source>(null);
   const [hasToken, setHasToken] = useState(false);
+  const [persistedInDb, setPersistedInDb] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [message, setMessage] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
 
+  async function loadSettings() {
+    const res = await fetch("/api/settings/github", { cache: "no-store" });
+    const d = await res.json();
+    setUsername(d.username ?? "");
+    setInitial(d.username ?? "");
+    setActiveSource(d.activeSource ?? null);
+    setHasToken(!!d.hasToken);
+    setPersistedInDb(!!d.persistedInDatabase);
+    setLoading(false);
+  }
+
   useEffect(() => {
-    let active = true;
-    fetch("/api/settings/github", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => {
-        if (!active) return;
-        setUsername(d.username ?? "");
-        setInitial(d.username ?? "");
-        setHasToken(!!d.hasToken);
-        setLoading(false);
-      })
-      .catch(() => active && setLoading(false));
-    return () => {
-      active = false;
-    };
+    // loadSettings only updates state after an awaited fetch, not synchronously.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadSettings().catch(() => setLoading(false));
   }, []);
 
   async function save(e: React.FormEvent) {
@@ -44,12 +57,36 @@ export function GithubSettings() {
         return;
       }
       setInitial(data.username);
+      await loadSettings();
+      router.refresh();
       setMessage({
         kind: "ok",
-        text: "Saved. Your live work will sync from this account.",
+        text: data.persisted
+          ? "Saved. Live Work will sync from this account."
+          : `Saved in session only. ${data.hint ?? "Set GITHUB_USERNAME or edit github.config.json for production."}`,
       });
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function forceRefresh() {
+    setRefreshing(true);
+    setMessage(null);
+    try {
+      const res = await fetch("/api/github/repos", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage({ kind: "err", text: data.error ?? "Refresh failed." });
+        return;
+      }
+      router.refresh();
+      setMessage({
+        kind: "ok",
+        text: `Synced ${data.repos?.length ?? 0} repositories from @${data.username}.`,
+      });
+    } finally {
+      setRefreshing(false);
     }
   }
 
@@ -69,12 +106,27 @@ export function GithubSettings() {
         </div>
       </div>
 
+      {initial && activeSource && (
+        <p className="mb-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white/55">
+          Currently syncing{" "}
+          <span className="font-medium text-white">@{initial}</span> from{" "}
+          <span className="text-white/75">{SOURCE_LABEL[activeSource]}</span>
+          {!persistedInDb && activeSource !== "database" && (
+            <span className="mt-1 block text-amber-300/90">
+              Admin saves may not persist on serverless hosts — use{" "}
+              <code className="text-white/70">GITHUB_USERNAME</code> or{" "}
+              <code className="text-white/70">github.config.json</code>.
+            </span>
+          )}
+        </p>
+      )}
+
       <form onSubmit={save} className="space-y-4">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-white/70">
             GitHub username
           </label>
-          <div className="flex items-center rounded-xl border border-white/10 bg-black/30 px-3 focus-within:border-fuchsia-400/50">
+          <div className="flex items-center rounded-xl border border-white/10 bg-black/30 px-3 focus-within:border-cyan-400/50">
             <span className="text-white/40">@</span>
             <input
               value={username}
@@ -86,7 +138,7 @@ export function GithubSettings() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-xs">
+        <div className="flex flex-wrap items-center gap-2 text-xs">
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 ring-1 ${
               hasToken
@@ -111,13 +163,21 @@ export function GithubSettings() {
           </p>
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             type="submit"
             disabled={saving || loading || !username || username === initial}
             className="rounded-xl bg-gradient-to-r from-sky-500 via-cyan-400 to-teal-300 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40 disabled:opacity-50"
           >
             {saving ? "Saving…" : "Save & sync"}
+          </button>
+          <button
+            type="button"
+            onClick={forceRefresh}
+            disabled={refreshing || !initial}
+            className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/10 disabled:opacity-50"
+          >
+            {refreshing ? "Refreshing…" : "Force refresh"}
           </button>
           {initial && (
             <Link
@@ -129,9 +189,10 @@ export function GithubSettings() {
           )}
         </div>
         <p className="text-xs text-white/35">
-          For private repos, more deployment detail and a higher rate limit, set
-          a <code className="text-white/55">GITHUB_TOKEN</code> environment
-          variable.
+          Production tip: set <code className="text-white/55">GITHUB_USERNAME</code>{" "}
+          on your host, or edit <code className="text-white/55">github.config.json</code>{" "}
+          in the repo. Add <code className="text-white/55">GITHUB_TOKEN</code> for
+          higher rate limits and deployment status.
         </p>
       </form>
     </div>

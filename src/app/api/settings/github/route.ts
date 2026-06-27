@@ -1,20 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import {
-  getSetting,
-  setSetting,
   GITHUB_USERNAME_KEY,
+  resolveGithubUsernameWithSource,
+  setSetting,
 } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
-// GET — current configured GitHub username (and whether a token is present).
+// GET — resolved GitHub username and where it came from.
 export async function GET() {
-  const username = await getSetting(GITHUB_USERNAME_KEY, "GITHUB_USERNAME");
+  const resolved = await resolveGithubUsernameWithSource();
+
+  let dbValue: string | null = null;
+  try {
+    const row = await prisma.setting.findUnique({
+      where: { key: GITHUB_USERNAME_KEY },
+    });
+    dbValue = row?.value?.trim() || null;
+  } catch {
+    // DB unavailable (common on serverless without persistent storage).
+  }
+
   return NextResponse.json({
-    username: username ?? "",
+    username: resolved.username ?? "",
+    activeSource: resolved.source,
     hasToken: !!process.env.GITHUB_TOKEN?.trim(),
-    source: (await getSetting(GITHUB_USERNAME_KEY)) ? "database" : "env",
+    persistedInDatabase: !!dbValue,
+    databaseUsername: dbValue ?? "",
+    configFile: "github.config.json",
   });
 }
 
@@ -40,10 +56,41 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  await setSetting(GITHUB_USERNAME_KEY, username);
+  try {
+    await setSetting(GITHUB_USERNAME_KEY, username);
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Could not write to the database.";
+    return NextResponse.json(
+      {
+        error:
+          "Could not save to the database. On serverless hosts, set the GITHUB_USERNAME environment variable or edit github.config.json in the repo instead.",
+        detail: message,
+      },
+      { status: 503 },
+    );
+  }
 
-  // The /github and home pages render dynamically and resolve the username on
-  // each request, so the new account surfaces immediately — no cache busting
-  // needed (GitHub responses are keyed by username at the fetch layer).
-  return NextResponse.json({ ok: true, username });
+  let persisted = false;
+  try {
+    const row = await prisma.setting.findUnique({
+      where: { key: GITHUB_USERNAME_KEY },
+    });
+    persisted = row?.value === username;
+  } catch {
+    persisted = false;
+  }
+
+  revalidatePath("/");
+  revalidatePath("/github");
+
+  return NextResponse.json({
+    ok: true,
+    username,
+    persisted,
+    activeSource: persisted ? "database" : null,
+    hint: persisted
+      ? null
+      : "Set GITHUB_USERNAME in your host's environment variables, or commit your username in github.config.json.",
+  });
 }

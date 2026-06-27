@@ -1,11 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { fetchPortfolioRepos } from "@/lib/github";
+import { resolveGithubUsernameWithSource } from "@/lib/settings";
 import { RepoCard } from "@/components/RepoCard";
 
-// Render per-request so a username configured at runtime (admin DB setting or
-// the GITHUB_USERNAME env var) is always reflected. The underlying GitHub API
-// calls are cached separately (see lib/github.ts) to respect rate limits.
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -13,8 +11,21 @@ export const metadata: Metadata = {
   description: "An auto-generated portfolio sourced from my public GitHub work.",
 };
 
-export default async function GithubPage() {
-  const { username, repos, error } = await fetchPortfolioRepos(24);
+const SOURCE_HINT = {
+  database: "admin dashboard",
+  env: "GITHUB_USERNAME environment variable",
+  config: "github.config.json",
+} as const;
+
+export default async function GithubPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ fresh?: string }>;
+}) {
+  const params = await searchParams;
+  const fresh = params.fresh === "1";
+  const resolved = await resolveGithubUsernameWithSource();
+  const { username, repos, error } = await fetchPortfolioRepos(24, { fresh });
 
   const totalStars = repos.reduce((s, r) => s + r.stars, 0);
   const deployed = repos.filter(
@@ -46,11 +57,18 @@ export default async function GithubPage() {
               @{username}
             </a>
           ) : (
-            "my"
+            "your"
           )}{" "}
           public repositories — complete with generated cover art, language
           breakdowns and live deployment links.
         </p>
+
+        {username && resolved.source && (
+          <p className="mt-3 text-xs text-white/40">
+            Syncing via {SOURCE_HINT[resolved.source]}
+            {fresh ? " · just refreshed" : " · auto-refreshes every ~2 minutes"}
+          </p>
+        )}
 
         {repos.length > 0 && (
           <div className="mt-6 flex flex-wrap gap-3">
@@ -74,12 +92,29 @@ export default async function GithubPage() {
             {username ? "Couldn't load repositories" : "No GitHub account linked yet"}
           </p>
           <p className="mx-auto mt-2 max-w-md text-sm text-white/50">{error}</p>
-          <Link
-            href="/admin"
-            className="mt-5 inline-flex rounded-xl bg-white/10 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-white/20"
-          >
-            Configure in admin
-          </Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/admin"
+              className="inline-flex rounded-xl bg-white/10 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-white/20"
+            >
+              Configure in admin
+            </Link>
+            {username && (
+              <Link
+                href="/github?fresh=1"
+                className="inline-flex rounded-xl border border-white/10 px-5 py-2.5 text-sm font-medium text-white/80 transition hover:bg-white/5"
+              >
+                Try again
+              </Link>
+            )}
+          </div>
+        </div>
+      ) : repos.length === 0 ? (
+        <div className="glass rounded-2xl p-10 text-center">
+          <p className="text-lg font-medium text-white/80">No public repositories found</p>
+          <p className="mx-auto mt-2 max-w-md text-sm text-white/50">
+            @{username} has no public, non-fork repositories to display.
+          </p>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

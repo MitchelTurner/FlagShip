@@ -1,9 +1,10 @@
-import { getSetting, GITHUB_USERNAME_KEY } from "./settings";
+import { resolveGithubUsername } from "./settings";
 
 const API = "https://api.github.com";
-// Cache GitHub responses for an hour to stay well under unauthenticated rate
-// limits (60 req/hr) while keeping the portfolio reasonably fresh.
-const REVALIDATE = 3600;
+// Cache GitHub responses to respect rate limits. Repo lists refresh every 2 min;
+// per-repo language data can stay warmer longer.
+const REPO_LIST_REVALIDATE = 120;
+const REPO_DETAIL_REVALIDATE = 3600;
 
 export interface RepoDeployment {
   environment: string;
@@ -65,10 +66,6 @@ function ghHeaders(): HeadersInit {
   return headers;
 }
 
-export async function resolveGithubUsername(): Promise<string | null> {
-  return getSetting(GITHUB_USERNAME_KEY, "GITHUB_USERNAME");
-}
-
 function pagesUrlFor(repo: RawRepo): string | null {
   if (!repo.has_pages) return null;
   // GitHub Pages default URL. Custom domains aren't exposed here without an
@@ -83,7 +80,7 @@ async function fetchLanguages(
   try {
     const res = await fetch(`${API}/repos/${owner}/${repo}/languages`, {
       headers: ghHeaders(),
-      next: { revalidate: REVALIDATE },
+      next: { revalidate: REPO_DETAIL_REVALIDATE },
     });
     if (!res.ok) return [];
     const data = (await res.json()) as Record<string, number>;
@@ -111,7 +108,7 @@ async function fetchDeployment(
   try {
     const res = await fetch(
       `${API}/repos/${owner}/${repo}/deployments?per_page=1`,
-      { headers: ghHeaders(), next: { revalidate: REVALIDATE } },
+      { headers: ghHeaders(), next: { revalidate: REPO_DETAIL_REVALIDATE } },
     );
     if (!res.ok) return null;
     const deployments = (await res.json()) as {
@@ -123,7 +120,7 @@ async function fetchDeployment(
 
     const statusRes = await fetch(
       `${API}/repos/${owner}/${repo}/deployments/${latest.id}/statuses?per_page=1`,
-      { headers: ghHeaders(), next: { revalidate: REVALIDATE } },
+      { headers: ghHeaders(), next: { revalidate: REPO_DETAIL_REVALIDATE } },
     );
     let state = "active";
     let url: string | null = null;
@@ -152,22 +149,27 @@ export interface PortfolioResult {
 
 // Fetch and normalize a user's public repositories for the portfolio.
 // The configured username is resolved live (so admin/env changes apply
-// immediately), while the underlying GitHub API responses are cached for an
-// hour via the per-fetch `revalidate` option to respect rate limits. Because
-// the cache key includes the username, switching accounts always fetches fresh.
+// immediately), while GitHub API responses are cached briefly to respect rate
+// limits. The cache key includes the username, so switching accounts always
+// fetches fresh.
 export async function fetchPortfolioRepos(
   limit = 12,
+  options?: { fresh?: boolean },
 ): Promise<PortfolioResult> {
   const username = await resolveGithubUsername();
   if (!username) {
     return { username: null, repos: [], error: "No GitHub username configured." };
   }
 
+  const listCache = options?.fresh
+    ? ({ cache: "no-store" } as const)
+    : ({ next: { revalidate: REPO_LIST_REVALIDATE } } as const);
+
   let raw: RawRepo[];
   try {
     const res = await fetch(
       `${API}/users/${encodeURIComponent(username)}/repos?per_page=100&sort=pushed`,
-      { headers: ghHeaders(), next: { revalidate: REVALIDATE } },
+      { headers: ghHeaders(), ...listCache },
     );
     if (res.status === 404) {
       return {
