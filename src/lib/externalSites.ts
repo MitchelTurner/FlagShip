@@ -28,7 +28,7 @@ export const EXTERNAL_SITES: ExternalSite[] = [
     name: "Example Client Site",
     description:
       "A marketing site built for a client. The source lives in a private repository, so it isn't part of the GitHub-synced grid above.",
-    url: "https://example.com",
+    url: "https://ktnport.com/",
     role: "Client project",
     tags: ["Next.js", "Tailwind"],
     year: "2025",
