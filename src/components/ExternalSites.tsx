@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { EXTERNAL_SITES, type ExternalSite } from "@/lib/externalSites";
 
 function hostname(url: string): string {
@@ -20,9 +21,20 @@ function ExternalSiteCard({ site }: { site: ExternalSite }) {
       className="group flex flex-col overflow-hidden rounded-2xl glass transition hover:border-white/20 hover:shadow-2xl hover:shadow-cyan-500/10"
     >
       <div className="relative flex aspect-[1200/630] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-sky-500/20 via-cyan-400/10 to-teal-300/20">
-        <span className="text-6xl font-bold text-white/80 transition duration-500 group-hover:scale-110">
-          {initial}
-        </span>
+        {site.image ? (
+          <Image
+            src={site.image}
+            alt={`${site.name} cover`}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            unoptimized
+          />
+        ) : (
+          <span className="text-6xl font-bold text-white/80 transition duration-500 group-hover:scale-110">
+            {initial}
+          </span>
+        )}
         <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white/80 ring-1 ring-white/15 backdrop-blur">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
           Live

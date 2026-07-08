@@ -21,16 +21,19 @@ export type ExternalSite = {
   tags?: string[];
   /** Optional year or short date shown on the card, e.g. "2025". */
   year?: string;
+  /** Optional cover image path (served from /public), e.g. "/external/site.png". */
+  image?: string;
 };
 
 export const EXTERNAL_SITES: ExternalSite[] = [
   {
-    name: "Port of Ketchikan — Harbors",
+    name: "Port of Ketchikan",
     description:
       "Online boat moorage and harbor registration for the City of Ketchikan's Port & Harbors. Boaters register a vessel and pay moorage across Ketchikan's small-boat harbors online — no trip to the harbor office required.",
     url: "https://ktnport.com/",
     role: "Client project",
     tags: ["Web app", "Online payments", "Municipal"],
-    year: "2025",
+    year: "2026",
+    image: "/external/ktnport.png",
   },
 ];

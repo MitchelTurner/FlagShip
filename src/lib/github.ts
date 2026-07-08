@@ -89,31 +89,6 @@ function pagesUrlFor(repo: RawRepo): string | null {
   return `https://${repo.owner.login}.github.io/${repo.name}/`;
 }
 
-// Hosting *dashboard* hosts. Their deployment URLs point at a login-gated
-// control panel rather than the public site, so we surface the deployment
-// status badge but not a misleading "view deployment" link.
-const DASHBOARD_HOSTS = [
-  "railway.com",
-  "vercel.com",
-  "dashboard.render.com",
-  "app.netlify.com",
-  "console.cloud.google.com",
-  "console.aws.amazon.com",
-];
-
-function publicDeploymentUrl(url: string | null): string | null {
-  if (!url) return null;
-  try {
-    const host = new URL(url).hostname.replace(/^www\./, "");
-    if (DASHBOARD_HOSTS.some((h) => host === h || host.endsWith(`.${h}`))) {
-      return null;
-    }
-    return url;
-  } catch {
-    return null;
-  }
-}
-
 async function fetchLanguages(
   owner: string,
   repo: string,
@@ -175,9 +150,7 @@ async function fetchDeployment(
       }[];
       if (statuses.length) {
         state = statuses[0].state;
-        url = publicDeploymentUrl(
-          statuses[0].environment_url || statuses[0].target_url || null,
-        );
+        url = statuses[0].environment_url || statuses[0].target_url || null;
       }
     }
     return { environment: latest.environment, state, url };
