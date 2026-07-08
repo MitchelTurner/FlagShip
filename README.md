@@ -37,8 +37,13 @@ The homepage **is** the portfolio. A separate `/about` page covers background an
 ### GitHub integration
 
 - Username resolution: **admin DB** → `GITHUB_USERNAME` env → `github.config.json`
-- Deployment links from repo homepage, GitHub Pages, or Deployments API (with token)
-- Rate-limit aware: optional `GITHUB_TOKEN` raises limit from 60 → 5,000 req/hr
+- Deployment status from repo homepage, GitHub Pages, or the Deployments API
+- Rate-limit aware: without a token, deployment badges are fetched for the first
+  ~12 repos only (60 req/hr limit); a `GITHUB_TOKEN` raises the limit to 5,000
+  req/hr and shows deployments for **every** repo
+- Deployment links that point at a login-gated host dashboard (Railway, Vercel,
+  etc.) are shown as a status badge without a broken link — set the repo's
+  **homepage** field to surface a clickable public URL
 
 ---
 
@@ -137,7 +142,7 @@ Open [http://localhost:3000](http://localhost:3000). Admin: [http://localhost:30
 | `DATABASE_URL` | Yes | SQLite path, e.g. `file:./dev.db` |
 | `ADMIN_PASSWORD` | Yes | Password for `/admin` (change before deploy) |
 | `GITHUB_USERNAME` | No | GitHub account for Live Work |
-| `GITHUB_TOKEN` | No | Read-only token for higher rate limits + deployment status |
+| `GITHUB_TOKEN` | Recommended | Read-only token: 60 → 5,000 req/hr and deployment badges for every repo (without it, only the first ~12 repos are enriched) |
 
 ### `github.config.json`
 

@@ -16,6 +16,11 @@ const API = "https://api.github.com";
 // per-repo language data can stay warmer longer.
 const REPO_LIST_REVALIDATE = 120;
 const REPO_DETAIL_REVALIDATE = 3600;
+// Without a token GitHub allows only 60 requests/hr. Language + deployment
+// enrichment costs several requests per repo, so we cap how many repos get
+// deployment lookups when unauthenticated to protect the core repo-list
+// request. A GITHUB_TOKEN removes this cap (5,000 req/hr).
+const UNAUTH_DEPLOYMENT_LIMIT = 12;
 
 export interface RepoDeployment {
   environment: string;
@@ -84,6 +89,31 @@ function pagesUrlFor(repo: RawRepo): string | null {
   return `https://${repo.owner.login}.github.io/${repo.name}/`;
 }
 
+// Hosting *dashboard* hosts. Their deployment URLs point at a login-gated
+// control panel rather than the public site, so we surface the deployment
+// status badge but not a misleading "view deployment" link.
+const DASHBOARD_HOSTS = [
+  "railway.com",
+  "vercel.com",
+  "dashboard.render.com",
+  "app.netlify.com",
+  "console.cloud.google.com",
+  "console.aws.amazon.com",
+];
+
+function publicDeploymentUrl(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    if (DASHBOARD_HOSTS.some((h) => host === h || host.endsWith(`.${h}`))) {
+      return null;
+    }
+    return url;
+  } catch {
+    return null;
+  }
+}
+
 async function fetchLanguages(
   owner: string,
   repo: string,
@@ -113,9 +143,11 @@ async function fetchDeployment(
   owner: string,
   repo: string,
 ): Promise<RepoDeployment | null> {
-  // Deployment data requires an API call per repo, so only attempt it when a
-  // token is configured (otherwise we'd exhaust the unauthenticated limit).
-  if (!process.env.GITHUB_TOKEN?.trim()) return null;
+  // Deployment data (environment + status) is public for public repos, so we
+  // fetch it whether or not a token is set. Without a token this counts against
+  // the 60 req/hr unauthenticated limit, so callers cap how many repos are
+  // enriched (see UNAUTH_DEPLOYMENT_LIMIT); a GITHUB_TOKEN raises the limit to
+  // 5,000/hr and lets every repo's deployment show.
   try {
     const res = await fetch(
       `${API}/repos/${owner}/${repo}/deployments?per_page=1`,
@@ -143,7 +175,9 @@ async function fetchDeployment(
       }[];
       if (statuses.length) {
         state = statuses[0].state;
-        url = statuses[0].environment_url || statuses[0].target_url || null;
+        url = publicDeploymentUrl(
+          statuses[0].environment_url || statuses[0].target_url || null,
+        );
       }
     }
     return { environment: latest.environment, state, url };
@@ -215,11 +249,18 @@ export async function fetchPortfolioRepos(
     })
     .slice(0, limit);
 
+  const hasToken = Boolean(process.env.GITHUB_TOKEN?.trim());
+  const deploymentLimit = hasToken
+    ? selected.length
+    : Math.min(selected.length, UNAUTH_DEPLOYMENT_LIMIT);
+
   const repos = await Promise.all(
-    selected.map(async (r): Promise<PortfolioRepo> => {
+    selected.map(async (r, index): Promise<PortfolioRepo> => {
       const [languages, deployment] = await Promise.all([
         fetchLanguages(r.owner.login, r.name),
-        fetchDeployment(r.owner.login, r.name),
+        index < deploymentLimit
+          ? fetchDeployment(r.owner.login, r.name)
+          : Promise.resolve(null),
       ]);
       return {
         id: r.id,
