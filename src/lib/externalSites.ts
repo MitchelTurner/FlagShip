@@ -1,0 +1,36 @@
+/**
+ * Curated list of live websites whose source code is NOT public on GitHub.
+ *
+ * The GitHub-synced "Live work" grid can only show repositories that are
+ * public. Use this list for client projects, private repos, or sites built on
+ * closed platforms — anything you want to showcase without linking to source.
+ *
+ * To add a site, copy one of the entries below and edit the fields. The
+ * section on the homepage hides itself automatically when this list is empty.
+ */
+export type ExternalSite = {
+  /** Display name of the site or project. */
+  name: string;
+  /** One or two sentences describing what it is. */
+  description: string;
+  /** Public URL of the live site. */
+  url: string;
+  /** Optional short label, e.g. "Client project" or "Freelance". */
+  role?: string;
+  /** Optional tech / topic tags shown as chips. */
+  tags?: string[];
+  /** Optional year or short date shown on the card, e.g. "2025". */
+  year?: string;
+};
+
+export const EXTERNAL_SITES: ExternalSite[] = [
+  {
+    name: "Example Client Site",
+    description:
+      "A marketing site built for a client. The source lives in a private repository, so it isn't part of the GitHub-synced grid above.",
+    url: "https://example.com",
+    role: "Client project",
+    tags: ["Next.js", "Tailwind"],
+    year: "2025",
+  },
+];

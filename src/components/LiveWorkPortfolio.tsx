@@ -8,6 +8,7 @@ import Link from "next/link";
 import { fetchPortfolioRepos } from "@/lib/github";
 import { resolveGithubUsernameWithSource } from "@/lib/settings";
 import { RepoCard } from "@/components/RepoCard";
+import { ExternalSites } from "@/components/ExternalSites";
 
 const SOURCE_HINT = {
   database: "admin dashboard",
@@ -114,6 +115,8 @@ export async function LiveWorkPortfolio({
           ))}
         </div>
       )}
+
+      <ExternalSites />
     </div>
   );
 }
