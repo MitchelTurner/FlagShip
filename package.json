@@ -2,12 +2,12 @@
   "name": "mitchelturner-dev",
   "version": "0.1.0",
   "description": "Personal portfolio site — auto-synced GitHub work, about page, and hidden admin dashboard.",
-  "author": "Mitchel Turner <https://github.com/TheMitchyBoy>",
+  "author": "Mitchel Turner <https://github.com/MitchelTurner>",
   "license": "MIT",
   "homepage": "https://mitchelturner.dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TheMitchyBoy/Portfolio.git"
+    "url": "https://github.com/MitchelTurner/FlagShip.git"
   },
   "keywords": [
     "portfolio",

@@ -5,7 +5,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Personal portfolio for **[Mitchel Turner](https://github.com/TheMitchyBoy)** — a Next.js site that auto-builds a project showcase from public GitHub repositories, with an about page and a password-protected admin area.
+Personal portfolio for **[Mitchel Turner](https://github.com/MitchelTurner)** — a Next.js site that auto-builds a project showcase from public GitHub repositories, with an about page and a password-protected admin area.
 
 **Live site:** [mitchelturner.dev](https://mitchelturner.dev)
 
@@ -106,8 +106,8 @@ flowchart TB
 
 ```bash
 # Clone and install
-git clone https://github.com/TheMitchyBoy/Portfolio.git
-cd Portfolio
+git clone https://github.com/MitchelTurner/FlagShip.git
+cd FlagShip
 npm install
 
 # Environment

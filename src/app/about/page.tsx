@@ -143,7 +143,7 @@ export default function AboutPage() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a
-            href="https://github.com/TheMitchyBoy"
+            href="https://github.com/MitchelTurner"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 via-cyan-400 to-teal-300 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40"
