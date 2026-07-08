@@ -25,12 +25,12 @@ export type ExternalSite = {
 
 export const EXTERNAL_SITES: ExternalSite[] = [
   {
-    name: "Example Client Site",
+    name: "Port of Ketchikan — Harbors",
     description:
-      "A marketing site built for a client. The source lives in a private repository, so it isn't part of the GitHub-synced grid above.",
+      "Online boat moorage and harbor registration for the City of Ketchikan's Port & Harbors. Boaters register a vessel and pay moorage across Ketchikan's small-boat harbors online — no trip to the harbor office required.",
     url: "https://ktnport.com/",
     role: "Client project",
-    tags: ["Next.js", "Tailwind"],
+    tags: ["Web app", "Online payments", "Municipal"],
     year: "2025",
   },
 ];
