@@ -7,6 +7,7 @@ import { LogoMark } from "@/components/LogoMark";
 const links = [
   { href: "/", label: "Work" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Navbar() {

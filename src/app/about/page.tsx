@@ -139,26 +139,36 @@ export default function AboutPage() {
           If you&apos;ve got a project — a data problem, an integration, a
           model, or just a piece of software that needs building — I&apos;m
           available for freelance and contract work. Get in touch and let&apos;s
-          talk about what you need.
+          talk about what you need, or email me at{" "}
+          <a
+            href="mailto:info@mitchelturner.dev"
+            className="font-medium text-white underline decoration-white/30 underline-offset-4 hover:decoration-white"
+          >
+            info@mitchelturner.dev
+          </a>
+          .
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 via-cyan-400 to-teal-300 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16v12H5.2L4 17.2z" />
+            </svg>
+            Get in touch
+          </Link>
           <a
             href="https://github.com/MitchelTurner"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 via-cyan-400 to-teal-300 px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/25 transition hover:shadow-cyan-500/40"
+            className="inline-flex items-center gap-2 rounded-xl glass px-5 py-2.5 text-sm font-medium text-white/80 transition hover:text-white"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
               <path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z" />
             </svg>
-            Get in touch on GitHub
+            GitHub
           </a>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 rounded-xl glass px-5 py-2.5 text-sm font-medium text-white/80 transition hover:text-white"
-          >
-            View my work
-          </Link>
         </div>
       </section>
     </div>

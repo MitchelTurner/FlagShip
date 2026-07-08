@@ -30,6 +30,7 @@ The homepage **is** the portfolio. A separate `/about` page covers background an
 |------|----------------|
 | **Live Work** (`/`) | Full GitHub portfolio — repo cards with generated art, language bars, deployment badges |
 | **About** (`/about`) | Bio, work areas, stack, and contact CTA |
+| **Contact** (`/contact`) | Contact form that emails the owner (via Resend), with a `mailto:` fallback |
 | **OG graphics** (`/api/og/repo`) | On-the-fly cover images from repo metadata |
 | **Admin** (`/admin`) | Hidden dashboard — GitHub sync settings, project CRUD, image upload |
 | **Auth** | HMAC cookie session; password never stored client-side |
@@ -145,6 +146,9 @@ Open [http://localhost:3000](http://localhost:3000). Admin: [http://localhost:30
 | `ADMIN_PASSWORD` | Yes | Password for `/admin` (change before deploy) |
 | `GITHUB_USERNAME` | No | GitHub account for Live Work |
 | `GITHUB_TOKEN` | Recommended | Read-only token: 60 → 5,000 req/hr and deployment badges for every repo (without it, only the first ~12 repos are enriched) |
+| `RESEND_API_KEY` | No | [Resend](https://resend.com) API key for the `/contact` form. Without it the form falls back to a `mailto:` link |
+| `CONTACT_TO_EMAIL` | No | Inbox for contact submissions (default `info@mitchelturner.dev`) |
+| `CONTACT_FROM_EMAIL` | No | Verified Resend sender, e.g. `Mitchel Turner <contact@mitchelturner.dev>` |
 
 ### `github.config.json`
 
