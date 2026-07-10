@@ -42,11 +42,10 @@ The homepage **is** the portfolio. A separate `/about` page covers background an
 - Rate-limit aware: without a token, deployment badges are fetched for the first
   ~12 repos only (60 req/hr limit); a `GITHUB_TOKEN` raises the limit to 5,000
   req/hr and shows deployments for **every** repo
-- "View deployment" links resolve in order: `LIVE_URL_OVERRIDES` (see
+- "View demo" links resolve in order: `LIVE_URL_OVERRIDES` (see
   `src/lib/liveUrls.ts`) → repo **homepage** → the Deployments API URL → GitHub
-  Pages. GitHub's Deployments API only exposes the hosting *dashboard* URL
-  (e.g. `railway.com/project/...`), so to link straight to a public production
-  site, set the repo's homepage or add an override
+  Pages. Railway/GitHub *dashboard* URLs are ignored — only public live sites
+  are linked. Add an override (or set the repo homepage) for each deployed app
 
 ---
 

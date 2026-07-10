@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { languageColor, type PortfolioRepo } from "@/lib/github";
 import { ogImageUrl, timeAgo } from "@/lib/format";
-import { LIVE_URL_OVERRIDES } from "@/lib/liveUrls";
+import { resolveLiveUrl } from "@/lib/liveUrls";
 
 const DEPLOY_STATE: Record<string, { label: string; classes: string; dot: string }> = {
   success: {
@@ -67,14 +67,8 @@ function ExternalLink({
 }
 
 export function RepoCard({ repo }: { repo: PortfolioRepo }) {
-  // Prefer an explicit override, then the repo homepage, then the deployment's
-  // own URL (e.g. the live Railway production link from the Deployments API),
-  // then GitHub Pages.
-  const liveUrl =
-    LIVE_URL_OVERRIDES[repo.name] ??
-    repo.homepage ??
-    repo.deployment?.url ??
-    repo.pagesUrl;
+  // Public live demo only — never Railway/GitHub dashboard URLs.
+  const liveUrl = resolveLiveUrl(repo);
   const deployState = repo.deployment
     ? (DEPLOY_STATE[repo.deployment.state] ?? DEPLOY_STATE.active)
     : null;
@@ -170,7 +164,7 @@ export function RepoCard({ repo }: { repo: PortfolioRepo }) {
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M7 17 17 7M9 7h8v8" />
               </svg>
-              View deployment
+              View demo
             </ExternalLink>
           )}
           <ExternalLink href={repo.url}>

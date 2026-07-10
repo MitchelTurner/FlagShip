@@ -9,6 +9,7 @@
  * @see resolveGithubUsername in ./settings.ts for username resolution
  * @see /api/og/repo for per-repo cover graphics
  */
+import { isPublicLiveUrl } from "./liveUrls";
 import { resolveGithubUsername } from "./settings";
 
 const API = "https://api.github.com";
@@ -150,7 +151,11 @@ async function fetchDeployment(
       }[];
       if (statuses.length) {
         state = statuses[0].state;
-        url = statuses[0].environment_url || statuses[0].target_url || null;
+        // Railway/GitHub often report a dashboard URL here — keep status for
+        // the badge, but only surface a URL when it's a public live site.
+        const raw =
+          statuses[0].environment_url || statuses[0].target_url || null;
+        url = isPublicLiveUrl(raw) ? raw : null;
       }
     }
     return { environment: latest.environment, state, url };
