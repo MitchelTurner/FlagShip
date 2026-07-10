@@ -31,7 +31,7 @@ The homepage **is** the portfolio. A separate `/about` page covers background an
 | **Live Work** (`/`) | Full GitHub portfolio — repo cards with generated art, language bars, deployment badges |
 | **About** (`/about`) | Bio, work areas, stack, and contact CTA |
 | **Contact** (`/contact`) | Contact form that emails the owner (via Resend), with a `mailto:` fallback |
-| **OG graphics** (`/api/og/repo`) | On-the-fly cover images from repo metadata |
+| **OG graphics** (`/api/og/repo`, `/api/og/site`) | On-the-fly cover images for Live Work repos and Other sites |
 | **Admin** (`/admin`) | Hidden dashboard — GitHub sync settings, project CRUD, image upload |
 | **Auth** | HMAC cookie session; password never stored client-side |
 
@@ -60,7 +60,7 @@ flowchart TB
 
   subgraph api [API routes]
     GH["/api/github/repos"]
-    OG["/api/og/repo"]
+    OG["/api/og/repo · /api/og/site"]
     Settings["/api/settings/github"]
   end
 

@@ -21,7 +21,11 @@ export type ExternalSite = {
   tags?: string[];
   /** Optional year or short date shown on the card, e.g. "2025". */
   year?: string;
-  /** Optional cover image path (served from /public), e.g. "/external/site.png". */
+  /**
+   * Optional cover image path (served from /public).
+   * Prefer leaving this unset — cards use the same generated OG art as Live Work
+   * (`/api/og/site`) so the two grids stay visually consistent.
+   */
   image?: string;
 };
 
@@ -34,6 +38,5 @@ export const EXTERNAL_SITES: ExternalSite[] = [
     role: "Client project",
     tags: ["Web app", "Online payments", "Municipal"],
     year: "2026",
-    image: "/external/ktnport.png",
   },
 ];

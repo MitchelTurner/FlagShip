@@ -44,3 +44,29 @@ export function ogImageUrl(repo: {
   });
   return `/api/og/repo?${params.toString()}`;
 }
+
+/** Cover art URL for curated "Other sites" cards — same visual system as Live Work. */
+export function ogSiteImageUrl(site: {
+  name: string;
+  description: string;
+  url: string;
+  role?: string;
+  tags?: string[];
+  year?: string;
+}): string {
+  let host = "";
+  try {
+    host = new URL(site.url).hostname.replace(/^www\./, "");
+  } catch {
+    host = site.url;
+  }
+  const params = new URLSearchParams({
+    name: site.name,
+    desc: site.description,
+    role: site.role ?? "Live site",
+    year: site.year ?? "",
+    host,
+    tags: (site.tags ?? []).slice(0, 4).join(","),
+  });
+  return `/api/og/site?${params.toString()}`;
+}
